@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="shortcut icon" type="image/x-icon" href="../res/home/favicon32.ico">
+    <link rel="icon" type="image/x-icon" href="../res/home/favicon32.ico">
+    <link rel="apple-touch-icon" sizes="57x57" href="../res/home/favicon72.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../res/home/favicon57.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../res/home/favicon114.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="../res/home/favicon144.png">
+
+    <title>{{ .Story.Title }} - 一只狗的火星旅行计划</title>
+
+    {{ template "font" . }}
+    <script src="../res/js/darkmode.js"></script>
+    <script src="../res/js/loading.js"></script>
+    <link rel="preload" href="{{ Url .Res.Font.FZYanSJW }}" as="font">
+    <link rel="preload" href="{{ Url .Res.Font.FZYanSJWBold }}" as="font">
+    <link rel="stylesheet" type="text/css" href="../res/css/darkmode.css"/>
+    <link rel="stylesheet" type="text/css" href="../res/css/loading.css"/>
+    <link rel="stylesheet" type="text/css" href="../res/css/homebutton.css"/>
+    <link rel="stylesheet" type="text/css" href="../res/css/cdnbutton.css"/>
+    <link rel="stylesheet" type="text/css" href="../res/css/art.css"/>
+    <link rel="stylesheet" type="text/css" href="../res/css/typography.css"/>
+    <link rel="stylesheet" type="text/css" href="../res/css/cover.css"/>
+    <link rel="stylesheet" type="text/css" href="../res/css/foot.css"/>
+
+    <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-analytics.js"></script>
+    <script src="../res/js/firebase.js"></script>
+</head>
+<body class="loading touch">
+<script>document.body.classList.add(dark_mode_class_name);</script>
+
+{{ template "homeButton" . }}
+{{ template "darkmodeButton" . }}
+{{ template "loading" . }}
+
+<span id="nav-shelter" onclick="nav_clicked()"></span>
+<div id="nav-div">
+    <p id="nav-title"></p>
+    <a id="nav-a" onclick="nav_clicked()">
+        <img id="nav-img" src="{{ Url .Res.Story.down_triangle }}"/>
+    </a>
+</div>
+<div id="nav-list-div"></div>
+
+<div id="head" class="{{ if gt (len .Story.Cover) 0 }}dark-mode-on{{ end }}"
+        {{- if eq (len .Story.Cover) 0 }} style="height: 30vh" {{- end }}>
+    <img src="{{ .Story.StoryRelativeCoverPath }}" id="cover-img" {{ if eq (len .Story.Cover) 0 }} style="display: none" {{ end }}/>
+    <span id="cover-shadow" {{ if eq (len .Story.Cover) 0 -}} style="display: none" {{- end }}></span>
+    <div id="head-text">
+        <div id="title">{{ .Story.Title }}</div>
+        <div id="class">{{ .Story.Class }}</div>
+    </div>
+</div>
+<div id="info">
+    <span id="story-date">{{ .Story.StoryDate }}</span>
+{{/*    <?php include_once "template/cdnbutton.php"?>*/}}
+    <div id="image-num-div" onclick="change_image_num()">
+        <img id="image-num-img" src="{{ Url .Res.Story.image }}"/>
+        <span id="image-num"></span>
+    </div>
+</div>
+<!--<hr>-->
+<div id="content">
+    {{ .Content }}
+</div>
+<div id="end">END</div>
+<div id="associated-div" {{ if eq (len .Story.Associated) 0 -}} style="display: none" {{- end }}>
+    <p id="associated-title">还想再看看？</p>
+    <div id="associated-blogs">
+        {{ range $idx, $ele := .AssociatedStories }}
+            <div id="blog-{{$idx}}-div" class="cover-style-2 {{ if not (mod $idx 2) -}} reverse {{- end }} blog-class-{{.Class}}"
+                 style="--style2-h-in-w500: {{ if eq (len $ele.Cover) 0 -}} 50vh {{- else -}} 100vh {{- end }}">
+                <hr class="cover-hr" style="opacity: {{ if eq $idx 0 -}} 0 {{- else -}} 1 {{- end }}">
+                <a id="blog-{{$idx}}-cover-link" class="cover-image-link transition" href="{{ .Dir }}" style="display: {{ if eq (len .Cover) 0 }} none {{ else }} block {{ end }}">
+                    <img src="{{ .StoryRelativeCoverPath }}" id="blog-{{$idx}}-cover" class="cover-image"/>
+                </a>
+                <div id="blog-{{$idx}}-text" class="cover-text">
+                    <span id="blog-{{$idx}}-class" class="cover-class" style="color: var({{ .ClassificationColor | css }})">{{ .Class }}</span>
+                    <a id="blog-{{$idx}}-title" href="../{{ .Dir }}" class="cover-title transition">{{ .Title }}</a>
+                    <span id="blog-{{$idx}}-date" class="cover-date">{{ .StoryDate }}</span>
+                    <a id="blog-{{$idx}}-desc" href="../{{ .Dir }}" class="cover-desc transition">{{ .Description }}</a>
+                    <a id="blog-{{$idx}}-link" href="../{{ .Dir }}" class="cover-link transition">EXPLORE
+                        <img src="{{ Url $.Res.Home.arrow_right }}" id="blog-{{$idx}}-link-img" class="cover-link-img"/>
+                    </a>
+                </div>
+                <a id="blog-{{$idx}}-whole-link" class="cover-whole-link transition" href="../{{ .Dir }}"></a>
+            </div>
+        {{ end }}
+    </div>
+</div>
+{{ template "foot" . }}
+
+</body>
+
+<script src="../res/js/image_num.js"></script>
+<script src="../res/js/loading_transition.js"></script>
+<script src="../res/js/touch.js"></script>
+<script src="../res/js/add_title_link.js"></script>
+<script src="../res/js/story_nav.js"></script>
+<script src="../res/js/story.js"></script>
+</html>
